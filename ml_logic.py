@@ -9,12 +9,24 @@ BASELINE_DATA = {}
 
 with open("baseline_prices.csv", newline="", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile)
+
     for row in reader:
-        BASELINE_DATA[row["category"].lower()] = {
-            "min": float(row["min_price"]),
-            "avg": float(row["avg_price"]),
-            "max": float(row["max_price"])
-        }
+        try:
+            category = row["category"].strip().lower()
+            min_p = float(row["min_price"])
+            avg_p = float(row["avg_price"])
+            max_p = float(row["max_price"])
+
+            BASELINE_DATA[category] = {
+                "min": min_p,
+                "avg": avg_p,
+                "max": max_p
+            }
+
+        except (ValueError, KeyError):
+            # Skip invalid or incomplete rows safely
+            continue
+
 
 
 def normalize(text: str):
